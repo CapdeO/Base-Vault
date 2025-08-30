@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Wallet, Target, Clock, DollarSign, Shield, Zap, AlertTriangle, Lock } from "lucide-react"
 
 interface Goal {
@@ -203,17 +204,27 @@ export default function BaseVaultApp() {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)))
   }
 
+  const fmt = (n: number) =>
+    n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex flex-col relative">
+    <TooltipProvider>
+      <div className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950 flex flex-col relative">
+        <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -top-20 left-1/2 h-80 w-[36rem] -translate-x-1/2 rounded-full bg-blue-600/20 blur-3xl" />
+        </div>
       {/* Header */}
-      <header className="border-b border-gray-700 bg-gray-900/80 backdrop-blur-sm flex-shrink-0">
-        <div className="px-4 py-4">
+        <header className="border-b border-gray-800 bg-gray-900/70 backdrop-blur flex-shrink-0">
+          <div className="mx-auto w-full max-w-5xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <Lock className="w-5 h-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold text-white">BaseVault</h1>
+              <div className="leading-tight">
+                <h1 className="text-lg font-semibold bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">BaseVault</h1>
+                <p className="text-[11px] text-gray-400">Lock goals. Earn yield. Stay disciplined.</p>
+              </div>
             </div>
             <div className="flex items-center space-x-2">
               {!isConnected ? (
@@ -236,7 +247,7 @@ export default function BaseVaultApp() {
                         {(() => {
                           if (!connected) {
                             return (
-                              <Button onClick={openConnectModal} className="bg-blue-600 hover:bg-blue-700" size="sm">
+                              <Button onClick={openConnectModal} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90" size="sm">
                                 <Wallet className="w-4 h-4 mr-2" />
                                 Connect Wallet
                               </Button>
@@ -261,31 +272,33 @@ export default function BaseVaultApp() {
                       <span>Switch to Sepolia</span>
                     </Button>
                   )}
-                  <Badge variant={isOnSepoliaChain ? "default" : "destructive"} className="flex items-center space-x-1">
+                  <Badge variant={isOnSepoliaChain ? "default" : "destructive"} className="flex items-center space-x-1 bg-gray-800 border border-gray-700">
                     <div className={`w-2 h-2 ${isOnSepoliaChain ? "bg-green-500" : "bg-red-500"} rounded-full`} />
-                    <span>{isOnSepoliaChain ? "Sepolia Network" : "Wrong Network"}</span>
+                    <span className="text-xs">{isOnSepoliaChain ? "Sepolia" : "Wrong Network"}</span>
                   </Badge>
-                  <Badge variant="outline" className="text-xs border-gray-600 text-gray-300">
-                    {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Not Connected"}
+                  <Badge variant="outline" className="text-xs border-gray-700 text-gray-300 bg-gray-800">
+                    {address ? `${address.slice(0, 4)}…${address.slice(-4)}` : "Not Connected"}
                   </Badge>
                 </>
               )}
             </div>
           </div>
-        </div>
-      </header>
+          </div>
+        </header>
+        <main className="flex-1 overflow-y-auto">
+          <div className="mx-auto w-full max-w-5xl px-4 py-6 space-y-4">
 
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {!currentGoal ? (
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-gray-800/80 border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg text-white">
                 <Target className="w-5 h-5 text-blue-400" />
-                <span>Create Goal</span>
+                <span>Create a Lock Goal</span>
               </CardTitle>
-              <CardDescription className="text-sm text-gray-300">Set target amount and timeline</CardDescription>
+              <CardDescription className="text-sm text-gray-300">Define your target, deposit, and duration. Funds earn yield while locked.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
               <div className="space-y-1">
                 <Label htmlFor="goal-name" className="text-sm text-gray-300">
                   Goal Name
@@ -304,27 +317,45 @@ export default function BaseVaultApp() {
                   <Label htmlFor="target-amount" className="text-sm text-gray-300">
                     Target (USDC)
                   </Label>
-                  <Input
+                  <div className="relative">
+                    <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-gray-400">$</div>
+                    <Input
                     id="target-amount"
                     type="number"
                     placeholder="150"
                     value={newGoal.targetAmount}
                     onChange={(e) => setNewGoal({ ...newGoal, targetAmount: e.target.value })}
-                    className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600"
-                  />
+                      className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600 pl-6"
+                    />
+                  </div>
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="duration" className="text-sm text-gray-300">
                     Days
                   </Label>
-                  <Input
+                  <div className="flex items-center gap-2">
+                    <Input
                     id="duration"
                     type="number"
                     placeholder="60"
                     value={newGoal.duration}
                     onChange={(e) => setNewGoal({ ...newGoal, duration: e.target.value })}
-                    className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600"
-                  />
+                      className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600"
+                    />
+                    <div className="hidden sm:flex gap-1">
+                      {[30, 60, 90].map((d) => (
+                        <Button
+                          key={d}
+                          size="icon"
+                          variant="outline"
+                          className={`h-8 w-8 border-gray-600 text-gray-300 ${String(d) === newGoal.duration ? "bg-gray-700" : ""}`}
+                          onClick={() => setNewGoal({ ...newGoal, duration: String(d) })}
+                        >
+                          {d}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -332,14 +363,17 @@ export default function BaseVaultApp() {
                 <Label htmlFor="initial-deposit" className="text-sm text-gray-300">
                   Initial Deposit (USDC)
                 </Label>
-                <Input
+                <div className="relative">
+                  <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-gray-400">$</div>
+                  <Input
                   id="initial-deposit"
                   type="number"
                   placeholder="50"
                   value={newGoal.initialDeposit}
                   onChange={(e) => setNewGoal({ ...newGoal, initialDeposit: e.target.value })}
-                  className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600"
-                />
+                    className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600 pl-6"
+                  />
+                </div>
               </div>
 
               <div className="space-y-1">
@@ -348,32 +382,49 @@ export default function BaseVaultApp() {
                 </Label>
                 <Select value={newGoal.protocol} onValueChange={(value) => setNewGoal({ ...newGoal, protocol: value })}>
                   <SelectTrigger className="text-sm bg-gray-700 border-gray-600 text-white">
-                    <SelectValue />
+                    <SelectValue placeholder="Choose protocol" />
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-700">
                     <SelectItem value="aave" className="text-white hover:bg-gray-700">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                          <span className="text-[8px] font-bold text-white">A</span>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" />
+                          <span>Aave</span>
                         </div>
-                        <span>Aave</span>
+                        <span className="text-[11px] text-gray-400"> - Stable yield</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="symbiotic" className="text-white hover:bg-gray-700">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                          <span className="text-[8px] font-bold text-white">S</span>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full" />
+                          <span>Symbiotic</span>
                         </div>
-                        <span>Symbiotic</span>
+                        <span className="text-[11px] text-gray-400"> - Cohort bonus</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <Shield className="h-3.5 w-3.5 text-blue-400" />
+                  <span>Funds locked until goal date</span>
+                </div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Badge className="bg-gray-700 border border-gray-600 text-gray-200">~5.8% APY</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-gray-800 border-gray-700 text-gray-200">
+                    Simulated rate for demo purposes.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+
               <Button
                 onClick={openCreateGoalModal}
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90"
                 disabled={!newGoal.name || !newGoal.targetAmount || !newGoal.initialDeposit}
               >
                 Create Goal
@@ -381,7 +432,7 @@ export default function BaseVaultApp() {
             </CardContent>
           </Card>
         ) : (
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="bg-gray-800/80 border-gray-800">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center space-x-2 text-lg text-white">
                 <Target className="w-5 h-5 text-blue-400" />
@@ -393,7 +444,7 @@ export default function BaseVaultApp() {
         )}
 
         {currentGoal && (
-          <Card className="overflow-hidden bg-gray-800 border-gray-700">
+          <Card className="overflow-hidden bg-gray-800/80 border-gray-800">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base text-white">{currentGoal.name}</CardTitle>
@@ -401,16 +452,16 @@ export default function BaseVaultApp() {
                   {canWithdraw(currentGoal) ? "Ready" : `${getDaysRemaining(currentGoal)}d left`}
                 </Badge>
               </div>
-              <CardDescription className="flex items-center space-x-3 text-xs text-gray-300">
-                <span className="flex items-center space-x-1">
+              <CardDescription className="flex flex-wrap items-center gap-3 text-xs text-gray-300">
+                <span className="flex items-center gap-1">
                   <DollarSign className="w-3 h-3" />
                   <span>
-                    ${currentGoal.currentAmount.toFixed(2)} / ${currentGoal.targetAmount.toFixed(2)}
+                    ${fmt(currentGoal.currentAmount)} / ${fmt(currentGoal.targetAmount)}
                   </span>
                 </span>
-                <span className="flex items-center space-x-1">
+                <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  <span>{currentGoal.targetDate.toLocaleDateString()}</span>
+                  <span>Due {currentGoal.targetDate.toLocaleDateString()}</span>
                 </span>
               </CardDescription>
             </CardHeader>
@@ -424,7 +475,7 @@ export default function BaseVaultApp() {
                 <Progress value={getProgress(currentGoal)} className="h-2" />
               </div>
 
-              <Separator className="bg-gray-600" />
+              <Separator className="bg-gray-700" />
 
               <div className="space-y-2">
                 <div className="grid grid-cols-2 gap-2">
@@ -432,7 +483,9 @@ export default function BaseVaultApp() {
                     <Label htmlFor={`deposit-${currentGoal.id}`} className="text-xs text-gray-300">
                       Deposit Amount
                     </Label>
-                    <Input
+                    <div className="relative">
+                      <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center text-gray-400">$</div>
+                      <Input
                       id={`deposit-${currentGoal.id}`}
                       type="number"
                       placeholder="50"
@@ -441,8 +494,9 @@ export default function BaseVaultApp() {
                         setSelectedGoal(currentGoal.id)
                         setDepositAmount(e.target.value)
                       }}
-                      className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600"
+                      className="text-sm text-white placeholder:text-gray-500 bg-gray-700 border-gray-600 pl-6"
                     />
+                    </div>
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor={`extend-days-${currentGoal.id}`} className="text-xs text-gray-300">
@@ -464,7 +518,7 @@ export default function BaseVaultApp() {
                 <Button
                   onClick={() => openDepositModal(currentGoal)}
                   disabled={selectedGoal !== currentGoal.id || !depositAmount}
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90"
                   size="sm"
                 >
                   <Zap className="w-3 h-3 mr-1" />
@@ -474,7 +528,7 @@ export default function BaseVaultApp() {
 
               <Button
                 variant="outline"
-                className="w-full bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700"
+                className="w-full bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800"
                 size="sm"
                 disabled={!canWithdrawMinStaking(currentGoal)}
                 onClick={() => openWithdrawModal(currentGoal)}
@@ -486,32 +540,36 @@ export default function BaseVaultApp() {
                     : `Min staking: ${minStakingCountdown[currentGoal.id] || 0}s`}
               </Button>
 
-              <div className="text-xs text-gray-300 bg-gray-700/50 p-2 rounded-lg">
-                <p className="font-medium mb-1 text-white">Yield Mechanics:</p>
-                <p>• Early withdrawal = lose yield (redistributed to others)</p>
-                <p>• On-time withdrawal = your deposit + yield + bonus from early exits</p>
-                <p>• 0.5% fee on withdrawal only</p>
-                <p>• Minimum staking time: 60 seconds</p>
+              <div className="text-xs text-gray-300 bg-gray-800/60 p-3 rounded-lg border border-gray-700">
+                <p className="font-medium mb-1 text-white">Yield Mechanics</p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li>Early withdrawal forfeits yield (redistributed to cohort).</li>
+                  <li>On-time withdrawal: principal + yield + cohort bonus.</li>
+                  <li>0.5% fee on withdrawal.</li>
+                  <li>Minimum staking time: 60 seconds.</li>
+                </ul>
               </div>
             </CardContent>
           </Card>
         )}
 
         {goals.length === 0 && (
-          <Card className="text-center py-8 bg-gray-800 border-gray-700">
+          <Card className="text-center py-8 bg-gray-800/80 border-gray-800">
             <CardContent>
               <Target className="w-10 h-10 text-gray-400 mx-auto mb-3" />
               <CardTitle className="text-base mb-2 text-white">No Goals Yet</CardTitle>
               <CardDescription className="text-sm text-gray-300">
-                Create your first savings goal to start earning yield with Aave and Symbiotic
+                Create your first savings goal to start earning yield with Aave and Symbiotic.
               </CardDescription>
             </CardContent>
           </Card>
         )}
       </div>
+          </div>
+        </main>
 
       <Dialog open={showCreateGoalModal} onOpenChange={setShowCreateGoalModal}>
-        <DialogContent className="sm:max-w-md bg-gray-800 border-gray-700">
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2 text-white">
               <Target className="w-5 h-5 text-blue-400" />
@@ -521,7 +579,7 @@ export default function BaseVaultApp() {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="bg-gray-700/50 p-4 rounded-lg space-y-2">
+            <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-700 space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Goal Name:</span>
                 <span className="text-sm font-medium text-white">{newGoal.name}</span>
@@ -546,7 +604,7 @@ export default function BaseVaultApp() {
               </div>
             </div>
 
-            <div className="text-xs text-gray-300 bg-gray-700/30 p-3 rounded-lg">
+            <div className="text-xs text-gray-300 bg-gray-800/50 p-3 rounded-lg border border-gray-700">
               <p className="font-medium mb-1 text-white">Remember:</p>
               <p>• Early withdrawal forfeits yield</p>
               <p>• Completing on time earns bonus yield</p>
@@ -555,10 +613,10 @@ export default function BaseVaultApp() {
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShowCreateGoalModal(false)} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <Button variant="outline" onClick={() => setShowCreateGoalModal(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800">
               Cancel
             </Button>
-            <Button onClick={confirmCreateGoal} disabled={isTransactionPending} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={confirmCreateGoal} disabled={isTransactionPending} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90">
               {!isOnSepoliaChain ? "Switch to Sepolia" : isTransactionPending ? "Processing..." : "Create Goal"}
             </Button>
           </DialogFooter>
@@ -566,7 +624,7 @@ export default function BaseVaultApp() {
       </Dialog>
 
       <Dialog open={showDepositModal} onOpenChange={setShowDepositModal}>
-        <DialogContent className="sm:max-w-md bg-gray-800 border-gray-700">
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2 text-white">
               <Zap className="w-5 h-5 text-blue-400" />
@@ -576,7 +634,7 @@ export default function BaseVaultApp() {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="bg-gray-700/50 p-4 rounded-lg space-y-2">
+            <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-700 space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Goal:</span>
                 <span className="text-sm font-medium text-white">{modalGoal?.name}</span>
@@ -593,10 +651,7 @@ export default function BaseVaultApp() {
               )}
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">New Total:</span>
-                <span className="text-sm font-medium text-white">
-                  ${modalGoal ? (modalGoal.currentAmount + Number.parseFloat(depositAmount || "0")).toFixed(2) : "0"}{" "}
-                  USDC
-                </span>
+                <span className="text-sm font-medium text-white">${modalGoal ? fmt(modalGoal.currentAmount + Number.parseFloat(depositAmount || "0")) : "0"} USDC</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Progress:</span>
@@ -625,10 +680,10 @@ export default function BaseVaultApp() {
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShowDepositModal(false)} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <Button variant="outline" onClick={() => setShowDepositModal(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800">
               Cancel
             </Button>
-            <Button onClick={confirmDeposit} disabled={isTransactionPending} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={confirmDeposit} disabled={isTransactionPending} className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90">
               {!isOnSepoliaChain ? "Switch to Sepolia" : isTransactionPending ? "Processing..." : "Confirm Deposit"}
             </Button>
           </DialogFooter>
@@ -636,7 +691,7 @@ export default function BaseVaultApp() {
       </Dialog>
 
       <Dialog open={showWithdrawModal} onOpenChange={setShowWithdrawModal}>
-        <DialogContent className="sm:max-w-md bg-gray-800 border-gray-700">
+        <DialogContent className="sm:max-w-md bg-gray-900 border-gray-800">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2 text-white">
               <DollarSign className="w-5 h-5 text-blue-400" />
@@ -646,14 +701,14 @@ export default function BaseVaultApp() {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="bg-gray-700/50 p-4 rounded-lg space-y-2">
+            <div className="bg-gray-800/60 p-4 rounded-lg border border-gray-700 space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Goal:</span>
                 <span className="text-sm font-medium text-white">{modalGoal?.name}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Principal:</span>
-                <span className="text-sm font-medium text-white">${modalGoal?.currentAmount.toFixed(2)} USDC</span>
+                <span className="text-sm font-medium text-white">${modalGoal ? fmt(modalGoal.currentAmount) : "0.00"} USDC</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm text-gray-300">Estimated Yield:</span>
@@ -667,7 +722,7 @@ export default function BaseVaultApp() {
                 <span className="text-sm text-gray-300">Withdrawal Fee (0.5%):</span>
                 <span className="text-sm font-medium text-red-400">-$0.85 USDC</span>
               </div>
-              <Separator className="bg-gray-600" />
+               <Separator className="bg-gray-700" />
               <div className="flex justify-between font-medium">
                 <span className="text-sm text-gray-300">Total Withdrawal:</span>
                 <span className={`text-sm ${modalGoal && canWithdraw(modalGoal) ? "text-white" : "text-green-400"}`}>
@@ -697,13 +752,13 @@ export default function BaseVaultApp() {
           </div>
 
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShowWithdrawModal(false)} className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <Button variant="outline" onClick={() => setShowWithdrawModal(false)} className="border-gray-700 text-gray-300 hover:bg-gray-800">
               Cancel
             </Button>
             <Button
               onClick={confirmWithdraw}
               disabled={isTransactionPending}
-              className={modalGoal && canWithdraw(modalGoal) ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"}
+              className={modalGoal && canWithdraw(modalGoal) ? "bg-green-600 hover:bg-green-700" : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-600/90 hover:to-indigo-600/90"}
             >
               {!isOnSepoliaChain ? "Switch to Sepolia" : isTransactionPending ? "Processing..." : "Confirm Withdrawal"}
             </Button>
@@ -721,6 +776,7 @@ export default function BaseVaultApp() {
           made with v0
         </a>
       </div>
-    </div>
+      </div>
+    </TooltipProvider>
   )
 }
