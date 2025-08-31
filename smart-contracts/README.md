@@ -73,9 +73,14 @@ This penalty serves a dual purpose: it not only discourages early withdrawals bu
 - **previewDeposit(uint256 assets)**: Preview the shares received on deposit.
 - **previewRedeem(uint256 shares)**: Preview the USDC amount redeemable, accounting for fees.
 
-## Example Transactions
+## Example Transactions from base to base
 - Example deposit: [Transaction 1](https://basescan.org/tx/0x8e299df9023f26cc850c7684a5ddd35c69db8444bbab53ee2c3634c2995bd2ad)
 - Example redeem: [Transaction 2](https://basescan.org/tx/0x4718c22691515d11b012a4974fdca1e78c8343a462b36c3e2c6fca7938e5c4d9)
+
+## Example Transactions from base to Symbiotic Yield
+- Example deposit in Symbiosis: [Transaction 3](https://basescan.org/tx/0x3d8d1a5d0170b351eeda3cd5a69f5c95e7de6d75933f0563b732fa1c89291190)
+- Deposit Arrived in Symbiosis: [Transaction 4](https://symbiosis.calderaexplorer.xyz/tx/0x6299a8eaf3fe93f98469c43687fddb26e3fa3081f3e853d1b6f02a9d65d31734)
+- Calling Withdraw in Symbiosis: [Transaction 5](https://symbiosis.calderaexplorer.xyz/tx/0x0e78621373f2e08f8f7bae4cb5214d65c14b406f94bf5830326926c6b632d81f)
 
 ## ABI
 
