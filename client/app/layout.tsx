@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: "Base Vault",
   description: "Goal-based savings dApp on Base",
   generator: "v0.app",
+  icons: {
+    icon: "/base.webp",
+  },
 }
 
 export default function RootLayout({

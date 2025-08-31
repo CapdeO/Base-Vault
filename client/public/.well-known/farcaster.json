@@ -1,0 +1,25 @@
+{
+  "frame": {
+    "name": "BaseVault",
+    "version": "1",
+    "iconUrl": "https://base-vault-aleph.vercel.app/base.webp",
+    "homeUrl": "https://base-vault-aleph.vercel.app",
+    "splashImageUrl": "https://base-vault-aleph.vercel.app/splash.png",
+    "splashBackgroundColor": "#000000",
+    "subtitle": "Set goals and savely earn USDC",
+    "description": "Create your first savings goal to start earning yield with Aave and Symbiotic",
+    "primaryCategory": "finance",
+    "tags": [
+      "lending",
+      "saving",
+      "earn",
+      "usdc",
+      "vault"
+    ]
+  },
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  }
+}
