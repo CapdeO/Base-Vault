@@ -80,6 +80,8 @@ This penalty serves a dual purpose: it not only discourages early withdrawals bu
 The ABI for interacting with the contract is as follows:
 ```json
 [{"inputs":[{"internalType":"contract IERC20","name":"_aUsdc","type":"address"},{"internalType":"address","name":"_pool","type":"address"},{"internalType":"address","name":"_usdc","type":"address"}],"stateMutability":"nonpayable","type":"constructor"}, ...]
+```
+
 
 ## Libraries and Dependencies
 
