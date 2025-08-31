@@ -7,6 +7,10 @@ The **StakeFees** contract is an innovative ERC-4626 compliant vault designed to
 
 This penalty serves a dual purpose: it not only discourages early withdrawals but also redistributes the forfeited yield to other participants who have successfully met their goals. This mechanism allows our protocol to offer potentially higher yields compared to Aave, rewarding users for their commitment to the investment objectives.
 
+## Video explaining the dApp
+
+[![Basevault Video](https://img.youtube.com/vi/AuoA3E2hrjQ/0.jpg)](https://www.youtube.com/watch?v=AuoA3E2hrjQ)
+
 ## Key Features
 
 1. **Deposit Functionality**:
