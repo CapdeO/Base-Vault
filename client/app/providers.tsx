@@ -4,7 +4,6 @@ import type React from "react"
 
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit"
 import { WagmiProvider } from "wagmi"
-import { sepolia } from "wagmi/chains"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import { metaMaskWallet, coinbaseWallet, rainbowWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets"
 import '@rainbow-me/rainbowkit/styles.css';
@@ -20,7 +19,7 @@ const wallets = projectId
 const config = getDefaultConfig({
   appName: "Base Vault",
   projectId: projectId || "demo-project-id", // Provide fallback for demo
-  chains: [sepolia],
+  chains: [base],
   wallets: [
     {
       groupName: "Recommended",
