@@ -1,9 +1,11 @@
 # Base-Vault Documentation
 
 ## Overview
-    - **Deployed at**: `0x44271FEe892F5caedFc47C61E6dC495E56C40244`
+    - **Deployment at in Base**: `0x44271FEe892F5caedFc47C61E6dC495E56C40244`
 
-The **StakeFees** contract is an innovative ERC-4626 compliant vault designed to manage user deposits of USDC while providing enhanced yield opportunities through integration with the Symbiotic stakings and Aave protocol. Unlike directly depositing into Aave, our protocol ensures that participants who meet their investment objectives will always receive yield. Users who fail to meet their targets can still withdraw their funds but will incur a penalty, resulting in reduced yield.
+    - **Deployment at in Symbiosis**: `0x46D3F465E227f75a6CD03aB5c5782d1581BBfdCC`
+
+The **StakeFees** contract is an innovative Base and Symbiotic ERC-4626 compliant vault designed to manage user deposits of USDC while providing enhanced yield opportunities through integration with the Symbiotic stakings and Aave protocol. Unlike directly depositing into Aave, our protocol ensures that participants who meet their investment objectives will always receive yield. Users who fail to meet their targets can still withdraw their funds but will incur a penalty, resulting in reduced yield.
 
 This penalty serves a dual purpose: it not only discourages early withdrawals but also redistributes the forfeited yield to other participants who have successfully met their goals. This mechanism allows our protocol to offer potentially higher yields compared to Aave or Symbiotic while using their stakes and rewarding users for their commitment to the investment objectives.
 
