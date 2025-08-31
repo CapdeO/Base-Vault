@@ -1,6 +1,7 @@
 # StakeFees Contract Documentation
 
 ## Overview
+    - **Deployed at**: `0x44271FEe892F5caedFc47C61E6dC495E56C40244`
 
 The **StakeFees** contract is an innovative ERC-4626 compliant vault designed to manage user deposits of USDC while providing enhanced yield opportunities through integration with the Aave protocol. Unlike directly depositing into Aave, our protocol ensures that participants who meet their investment objectives will always receive yield. Users who fail to meet their targets can still withdraw their funds but will incur a penalty, resulting in reduced yield.
 
@@ -35,11 +36,12 @@ This penalty serves a dual purpose: it not only discourages early withdrawals bu
 5. **Fee Structure**:
    - A fee of **0.2%** is charged on the total extracted amount.
 
-6. **Aave Integration**:
+6. **Aave in BASE Integration**:
    - The contract interacts directly with the Aave protocol for depositing and withdrawing assets.
    - Addresses:
      - **USDC**: `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`
-     - **aUSDC**: Aave's token for the deposited USDC.
+     - **aUSDC**: `0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB` (Aave's token for the deposited USDC)
+     - **Avave Pool**: `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5`
 
 ## Contract Functionality
 
@@ -93,7 +95,7 @@ The ABI for interacting with the contract is as follows:
 - **AaveMock.sol**: Simulates Aave's functionality for testing purposes.
 - **Test.sol**: Creates a mock USDC token and facilitates testing of the main contract.
 
-## Integration with Symbiosis Finance
+## Integration with SYMBIOSIS FINANCE
 
 The contract also supports deposits into Symbiosis Finance's USDBC staking. It approves tokens for transfer to the META_ROUTER_GATEWAY and calls the respective functions to facilitate cross-chain operations.
 
