@@ -99,11 +99,21 @@ The ABI for interacting with the contract is as follows:
 
 The contract also supports deposits into Symbiosis Finance's USDBC staking. It approves tokens for transfer to the META_ROUTER_GATEWAY and calls the respective functions to facilitate cross-chain operations.
 
-### Important Addresses
+### Important Addresses in base for SYMBIOSIS
 - **USDBC**: `0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA`
 - **META_ROUTER**: `0x691df9C4561d95a4a726313089c8536dd682b946`
 - **META_ROUTER_GATEWAY**: `0x41Ae964d0F61Bb5F5e253141A462aD6F3b625B92`
 - **PORTAL**: `0xEE981B2459331AD268cc63CE6167b446AF4161f8`
+
+### Contract in SYMBIOSIS chain
+- **StakeFeesSymbiosis**: `0x46D3F465E227f75a6CD03aB5c5782d1581BBfdCC`
+(This contract is similar to StakeFeesBase but instead of calling the vault of aave to redeem, it calls the vault of Symbiosis finance, adjust the interfaces and changed the addresses to comunicate with)
+
+### Important Addresses in SYMBIOSIS for SYMBIOSIS
+- **USDBC**: `0xFBe80e8C3FbFf0bC314b33d1C6185230aC319309`
+- **vUSDBC**: `0xC3255E317481B95A3e61844c274dE8BAF8eDF397`
+- **vault**: `0xC3255E317481B95A3e61844c274dE8BAF8eDF397`
+
 
 ## Conclusion
 
