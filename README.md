@@ -1,4 +1,4 @@
-# StakeFees Contract Documentation
+# Base-Vault Documentation
 
 ## Overview
     - **Deployed at**: `0x44271FEe892F5caedFc47C61E6dC495E56C40244`
