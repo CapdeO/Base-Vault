@@ -8,6 +8,8 @@ import { sepolia } from "wagmi/chains"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import { metaMaskWallet, coinbaseWallet, rainbowWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets"
 import '@rainbow-me/rainbowkit/styles.css';
+import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
+import { base } from 'wagmi/chains';
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID
 
@@ -32,10 +34,12 @@ const queryClient = new QueryClient()
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme()}>{children}</RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <MiniKitProvider apiKey={process.env.NEXT_PUBLIC_CDP_CLIENT_API_KEY} chain={base}>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider theme={darkTheme()}>{children}</RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </MiniKitProvider>
   )
 }
